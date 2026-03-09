@@ -127,6 +127,31 @@ These are array methods used for **iterating over arrays**, but they serve diffe
 
 **Answer:**
 
+Arrow functions provide a **shorter syntax** to define functions and have **lexical** `this`, meaning they inherit `this` from their parent scope.
+
+- **`Syntax:`**
+
+    ```javascript
+    const functionName = (parameters) => expression;
+    ```
+
+- **`Examples:`**
+
+    ```javascript
+    // Single line
+    const add = (a, b) => a + b;
+    console.log(add(2, 3)); // 5
+
+    // Multiple lines
+    const multiply = (a, b) => {
+        const result = a * b;
+        return result;
+    };
+    console.log(multiply(2, 3)); // 6
+    ```
+
+- **`Tip:`** Avoid arrow functions for object methods if you need `this` to refer to the object.
+
 ---
 
 ##5️⃣ What are template literals?
