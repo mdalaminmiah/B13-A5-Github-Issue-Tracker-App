@@ -158,4 +158,28 @@ Arrow functions provide a **shorter syntax** to define functions and have **lexi
 
 **Answer:**
 
+Template literals are **string literals** that allow:
+
+- **Embedded expressions** using `${expression}`
+- **Multi-line strings** without using `\n`
+- Easier string concatenation
+
+- **`Examples:`**
+
+    ```javascript
+    const name = 'Alice';
+    const age = 25;
+
+    // Embedded expressions
+    const greeting = `Hello, ${name}! You are ${age} years old.`;
+    console.log(greeting); // Hello, Alice! You are 25 years old.
+
+    // Multi-line strings
+    const multiline = `This is line 1
+    This is line 2`;
+    console.log(multiline);
+    ```
+
+- **`Tip:`** Use template literals instead of **`+`** for string concatenation to make your code cleaner and readable.
+
 ---
