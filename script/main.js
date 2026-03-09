@@ -2,17 +2,64 @@ const API_URL = "https://phi-lab-server.vercel.app/api/v1/lab/issues";
 const SEARCH_URL = "https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=";
 let allIssues = [];
 
+// async function fetchIssues() {
+//     const container = document.getElementById('issue-container');
+//     // container.innerHTML = `<div class="col-span-full text-center py-20 text-gray-400 font-bold animate-pulse">CONNECTING...</div>`;
+//     container.innerHTML = `
+//         <div class="col-span-full flex flex-col items-center justify-center py-20 gap-4">
+//             <span class="loading loading-spinner loading-lg text-brand-purple"></span>
+//             <p class="text-xs font-black uppercase tracking-[0.2em] text-gray-400 animate-pulse">Connecting to Lab Server...</p>
+//         </div>
+//     `;
+//     try {
+//         const response = await fetch(API_URL);
+//         const result = await response.json();
+//         allIssues = result.data || [];
+//         renderIssues(allIssues);
+//     } catch (error) {
+//         container.innerHTML = `<div class="col-span-full text-center py-20 text-red-500 font-bold">Failed to load.</div>`;
+//     }
+// }
+
 async function fetchIssues() {
     const container = document.getElementById('issue-container');
-    container.innerHTML = `<div class="col-span-full text-center py-20 text-gray-400 font-bold animate-pulse">CONNECTING...</div>`;
-    
+    container.innerHTML = `
+        <div class="col-span-full flex flex-col items-center justify-center py-24 gap-6 text-center">
+            <span class="loading loading-spinner w-16 h-16 text-brand-purple"></span>
+            <div class="space-y-3">
+                <p class="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 animate-pulse">
+                    Connecting to Lab Server...
+                </p>
+                <progress class="progress progress-primary w-56 h-1.5" value="0" max="100" id="fetch-progress"></progress>
+                <p id="fetch-percentage" class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">0%</p>
+            </div>
+        </div>
+    `;
+
+    let loadProgress = 0;
+    const loadInterval = setInterval(() => {
+        loadProgress += 1;
+        const bar = document.getElementById('fetch-progress');
+        const text = document.getElementById('fetch-percentage');
+        if (bar) bar.value = loadProgress;
+        if (text) text.innerText = `${loadProgress}%`;
+        if (loadProgress >= 100) clearInterval(loadInterval);
+    }, 5);
+
     try {
-        const response = await fetch(API_URL);
-        const result = await response.json();
+        const fetchPromise = fetch(API_URL).then(res => res.json());
+        const timerPromise = new Promise(resolve => setTimeout(resolve, 500));
+        const [result] = await Promise.all([fetchPromise, timerPromise]);
+        clearInterval(loadInterval);
         allIssues = result.data || [];
         renderIssues(allIssues);
+
     } catch (error) {
-        container.innerHTML = `<div class="col-span-full text-center py-20 text-red-500 font-bold">Failed to load.</div>`;
+        clearInterval(loadInterval);
+        container.innerHTML = `
+            <div class="col-span-full text-center py-20">
+                <p class="text-red-500 font-black uppercase tracking-widest">⚠️ Failed to Load Issues</p>
+            </div>`;
     }
 }
 
@@ -58,7 +105,7 @@ function renderIssues(issues) {
 
 async function showDetails(id) {
     const modal = document.getElementById('issue_modal');
-    modal.showModal(); // DaisyUI Method
+    modal.showModal(); 
 
     try {
         const res = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`);
@@ -97,12 +144,54 @@ function filterIssues(status) {
     renderIssues(status === 'all' ? allIssues : allIssues.filter(i => i.status.toLowerCase() === status));
 }
 
+// async function handleSearch() {
+//     const query = document.getElementById('search-input').value;
+//     if (!query) return renderIssues(allIssues);
+//     const res = await fetch(`${SEARCH_URL}${query}`);
+//     const result = await res.json();
+//     renderIssues(result.data || []);
+// }
+
 async function handleSearch() {
-    const query = document.getElementById('search-input').value;
+    const queryInput = document.getElementById('search-input');
+    const container = document.getElementById('issue-container');
+    const query = queryInput.value.trim();
     if (!query) return renderIssues(allIssues);
-    const res = await fetch(`${SEARCH_URL}${query}`);
-    const result = await res.json();
-    renderIssues(result.data || []);
+    container.innerHTML = `
+        <div class="col-span-full flex flex-col items-center justify-center py-24 gap-6 text-center">
+            <span class="loading loading-spinner w-16 h-16 text-brand-purple"></span>
+            <div class="space-y-3">
+                <p class="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 animate-pulse">
+                    Searching Records...
+                </p>
+                <progress class="progress progress-primary w-48 h-1.5" value="0" max="100" id="search-progress"></progress>
+                <p id="search-percentage" class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">0%</p>
+            </div>
+        </div>
+    `;
+    let searchProgress = 0;
+    const searchInterval = setInterval(() => {
+        searchProgress += 1;
+        const bar = document.getElementById('search-progress');
+        const text = document.getElementById('search-percentage');
+        if (bar) bar.value = searchProgress;
+        if (text) text.innerText = `${searchProgress}%`;
+        if (searchProgress >= 100) clearInterval(searchInterval);
+    }, 5);
+
+    try {
+        const fetchPromise = fetch(`${SEARCH_URL}${query}`).then(res => res.json());
+        const timerPromise = new Promise(resolve => setTimeout(resolve, 500));
+        const [result] = await Promise.all([fetchPromise, timerPromise]);
+        clearInterval(searchInterval);
+        renderIssues(result.data || []);
+
+    } catch (error) {
+        clearInterval(searchInterval);
+        container.innerHTML = `<div class="col-span-full text-center py-20 text-red-500 font-black uppercase">⚠️ Search Failed</div>`;
+    }
 }
+
+
 
 fetchIssues();
