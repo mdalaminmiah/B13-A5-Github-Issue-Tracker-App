@@ -48,6 +48,36 @@ In JavaScript, variables can be declared using `var`, `let`, or `const`. They di
 
 **Answer:**
 
+The **spread operator** (`...`) allows an **iterable** (like an array or object) to be expanded into individual elements. It is commonly used for **copying arrays, merging arrays, and passing multiple arguments** to functions.
+
+- **`Array example:`**
+
+    ```javascript
+    const arr1 = [1, 2, 3];
+    const arr2 = [...arr1, 4, 5]; // [1, 2, 3, 4, 5]
+    ```
+
+- **`Object example:`**
+
+    ```javascript
+    const obj1 = { a: 1, b: 2 };
+    const obj2 = { ...obj1, c: 3 }; // { a: 1, b: 2, c: 3 }
+    ```
+
+- **`Function arguments example:`**
+
+    ```javascript
+    function sum(a, b, c) {
+        return a + b + c;
+    }
+    const nums = [1, 2, 3];
+    console.log(sum(...nums)); // 6
+    ```
+
+- **Tip:** Spread operator is **different from rest operator**, though both use `....`
+    - **Spread:** Expands an iterable
+    - **Rest:** Collects remaining elements into an array
+
 ---
 
 ##3️⃣ What is the difference between map(), filter(), and forEach()?
