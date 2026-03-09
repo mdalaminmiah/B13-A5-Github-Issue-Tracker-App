@@ -84,6 +84,43 @@ The **spread operator** (`...`) allows an **iterable** (like an array or object)
 
 **Answer:**
 
+These are array methods used for **iterating over arrays**, but they serve different purposes:
+
+- **`map()`**
+    - Creates a **new array** by applying a function to each element.
+    - **Returns:** a new array
+    - **Example:**
+
+    ```javascript
+    const numbers = [1, 2, 3];
+    const doubled = numbers.map((num) => num * 2);
+    console.log(doubled); // [2, 4, 6]
+    ```
+
+- **`filter()`**
+    - Creates a **new array** containing elements that meet a condition.
+    - **Returns:** a new array
+    - **Example:**
+
+    ```javascript
+    const numbers = [1, 2, 3, 4];
+    const evenNumbers = numbers.filter((num) => num % 2 === 0);
+    console.log(evenNumbers); // [2, 4]
+    ```
+
+- **`forEach()`**
+    - Executes a function for each element in the array.
+    - **Does not return** a new array.
+    - **Example:**
+
+    ```javascript
+    const numbers = [1, 2, 3];
+    numbers.forEach((num) => console.log(num));
+    // Output: 1 2 3
+    ```
+
+- **`Tip:`** Use `map` or `filter` if you want a **new array**, and `forEach` if you just want to **perform side effects.**
+
 ---
 
 ##4️⃣ What is an arrow function?
